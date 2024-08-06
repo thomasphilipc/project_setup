@@ -17,7 +17,7 @@ from sklearn.preprocessing import OneHotEncoder,StandardScaler
 
 from exception import CustomException
 from logger import logging
-from utils import save_object
+from src.utils import save_object
 @dataclass
 class DataTransformationConfig:
     preprocessor_object_file_path=os.path.join('artifact',"preprocessor.pkl")
