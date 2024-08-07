@@ -88,6 +88,7 @@ class ModelTrainer:
                 
             }
 
+            logging.info("going to evaluate model")
             model_report:dict=evaluate_models(x_train=x_train,
                                               y_train=y_train,
                                               x_test=x_test,
@@ -114,7 +115,7 @@ class ModelTrainer:
             if best_model_score<0.6:
                 raise CustomException("No best model found")
             
-          
+            logging.info(f"Model has been evaluated {best_model_name} with {best_model_score}")  
 
             save_object(
                 file_path=self.model_trainer_config.trained_model_file_path,

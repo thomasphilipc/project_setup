@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ML Pipeline</title>
+</head>
+<body>
+    <h1>Machine Learning Pipeline</h1>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="csvfile">Upload CSV file:</label>
+        <input type="file" name="file" id="csvfile">
+        <br>
+        <label for="csvurl">Or provide URL to CSV file:</label>
+        <input type="text" name="csvurl" id="csvurl">
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>

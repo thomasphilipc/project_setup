@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Target Column</title>
+</head>
+<body>
+    <h1>Select Target Column</h1>
+    <form action="/process_target_column" method="post">
+        <h2>Select your Target column to train the data model:</h2>
+        {% for column in columns %}
+            <input type="radio" name="target_column" value="{{ column }}">{{ column }}<br>
+        {% endfor %}
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
