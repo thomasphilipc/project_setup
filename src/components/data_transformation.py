@@ -7,7 +7,6 @@ from sklearn.compose import ColumnTransformer
 from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder,StandardScaler
-
 from src.exception import CustomException
 from src.logger import logging
 import os
@@ -44,7 +43,6 @@ class DataTransformation():
 
             num_pipeline= Pipeline(
                 steps=[
-                ("imputer",SimpleImputer(strategy="median")),
                 ("scaler",StandardScaler())
 
                 ]
@@ -53,7 +51,6 @@ class DataTransformation():
             cat_pipeline=Pipeline(
 
                 steps=[
-                ("imputer",SimpleImputer(strategy="most_frequent")),
                 ("one_hot_encoder",OneHotEncoder()),
                 ("scaler",StandardScaler(with_mean=False))
                 ]
@@ -103,16 +100,34 @@ class DataTransformation():
             logging.info(
                 f"Applying preprocessing object on training dataframe and testing dataframe."
             )
+            # Fit and transform the training data
+            # Fit and transform the training data
+            X_train_transformed = preprocessing_obj.fit_transform(input_feature_train_df)
+            X_test_transformed = preprocessing_obj.transform(input_feature_test_df)
 
-            input_feature_train_arr=preprocessing_obj.fit_transform(input_feature_train_df)
-            input_feature_test_arr=preprocessing_obj.transform(input_feature_test_df)
+            # Convert the sparse matrices to dense format   
+            X_train_dense = X_train_transformed.toarray() if hasattr(X_train_transformed, 'toarray') else X_train_transformed
+            X_test_dense = X_test_transformed.toarray() if hasattr(X_test_transformed, 'toarray') else X_test_transformed
 
-            train_arr = np.c_[
-                input_feature_train_arr, np.array(target_feature_train_df)
-            ]
-            test_arr = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
+            # Convert target DataFrames to arrays and ensure they are 2D
+            y_train_array = target_feature_train_df.to_numpy().reshape(-1, 1)
+            y_test_array = target_feature_test_df.to_numpy().reshape(-1, 1)
 
-            logging.info(f"Saved preprocessing object.")
+            # Debugging statements to check the shapes
+            print("Shape of X_train_dense:", X_train_dense.shape)
+            print("Shape of y_train_array:", y_train_array.shape)
+            print("Shape of X_test_dense:", X_test_dense.shape)
+            print("Shape of y_test_array:", y_test_array.shape)
+
+            # Concatenate features and targets for train and test sets
+            train_data = np.hstack((X_train_dense, y_train_array))
+            test_data = np.hstack((X_test_dense, y_test_array))
+
+            # Debugging statements to check the final shapes
+            print("Shape of train_data:", train_data.shape)
+            print("Shape of test_data:", test_data.shape)
+
+            
 
             save_object(
 
@@ -122,8 +137,8 @@ class DataTransformation():
             )
 
             return (
-                train_arr,
-                test_arr,
+                train_data,
+                test_data,
                 self.data_transformation_config.preprocessor_obj_file_path,
             )
         except Exception as e:

@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent))
 
-
+from data_transformation import DataTransformation
 
 from logger import logging
 from exception import CustomException
@@ -57,3 +57,10 @@ class DataIngestion:
             raise CustomException(e,sys)
             
 
+if __name__=="__main__":
+    di= DataIngestion()
+    train_data_path: str=os.path.join('notebook/data','carbonx.csv')
+    logging.info(train_data_path)
+    train_path,test_path=di.initiate_data_ingestion(train_data_path)
+    dt= DataTransformation('can_fuel_consumed')
+    dt.initiate_data_transformation(train_path,test_path)
